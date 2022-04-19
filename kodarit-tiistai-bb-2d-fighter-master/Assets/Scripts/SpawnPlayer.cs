@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using Photon.Pun;
 using Photon.Realtime;
+using System;
 
 public class SpawnPlayer : MonoBehaviour
 {
-    public GameObject[] playePreFabs;
+    public GameObject[] PlayerPreFabs;
 
     private float posY = 0f;
     private float player1xPos = -5f;
@@ -16,12 +17,18 @@ public class SpawnPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        Spawn();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	private void Spawn()
+	{
+        if (PhotonNetwork.LocalPlayer.IsMasterClient)
+        {
+            spawnPos = new Vector2(player1xPos, posY);
+        } else 
+        {
+            spawnPos = new Vector2(player2xpos, posY);
+        }
+        PhotonNetwork.Instantiate(PlayerPreFabs[0].name, spawnPos, Quaternion.identity);
+	}
 }
